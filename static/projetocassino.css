@@ -1,0 +1,331 @@
+body{
+    background-color: rgb(216, 212, 212);
+}
+
+
+
+.botao-clique_em_mim{
+
+    height: 150px;
+
+    width: 150px;
+
+    font-size: 24px;
+
+    border-radius: 200px;
+
+    color: white;
+
+    background-color: rgb(255, 33, 3);
+
+    display: block;
+
+    margin: 0 auto;
+
+    margin-top: 40px;
+
+    border: none;
+    
+
+}
+
+button{
+    transition: 0.1s;
+    border: none;
+}
+
+input{
+    border: none;
+}
+
+button:hover{
+    transform: scale(1.1);
+}
+
+
+
+.imagens{
+
+    display: flex;
+
+    justify-content: center;
+
+    size: 200px
+
+
+}
+
+
+
+.centro{
+
+    text-align: center;
+
+}
+
+
+
+.vitoria{
+
+    position: absolute;
+
+    right: 20px;
+
+    bottom: 20px;
+
+}
+
+
+
+.saldo{
+
+    position: absolute;
+
+    left: 20px;
+
+    top: 20px;
+
+}
+
+.melhorias{
+
+
+
+    position: absolute;
+
+    right: 20px;
+
+    top: 20px;
+
+    height: 50px;
+
+    width: 200px;
+
+    font-size: 18px;
+
+    border-radius: 10px;
+
+
+
+}
+
+
+
+.texto_melhorias{
+
+
+
+    position: absolute;
+
+    right: 1px;
+
+    top: 20px;
+
+    height: 50px;
+
+    width: 200px;
+
+    font-size: 18px;
+
+    border-radius: 10px;
+
+}
+
+
+
+.estatisticas {
+
+    position: absolute;
+
+    left: 20px;
+
+    bottom: 20px;
+
+    width: 250px;
+
+    padding: 20px;
+
+    border: 2px solid black;
+
+    border-radius: 10px;
+
+    background-color: #eeeeee;
+
+}
+
+
+
+.estatisticas h2 {
+
+    text-align: center;
+
+}
+
+
+
+.estatisticas p {
+
+    font-size: 18px;
+
+}.botao-clique_em_mim{
+
+    height: 150px;
+
+    width: 150px;
+
+    font-size: 24px;
+
+    border-radius: 200px;
+
+    color: white;
+
+    background-color: rgb(255, 33, 3);
+
+    display: block;
+
+    margin: 0 auto;
+
+    margin-top: 40px;
+
+}
+
+
+
+.imagens{
+
+    display: flex;
+
+    justify-content: center;
+
+    size: 200px
+
+}
+
+
+
+.centro{
+
+    text-align: center;
+
+}
+
+
+
+.vitoria{
+
+    position: absolute;
+
+    right: 20px;
+
+    bottom: 20px;
+
+}
+
+
+
+.saldo{
+
+    position: absolute;
+
+    left: 20px;
+
+    top: 20px;
+
+}
+
+.melhorias{
+
+
+
+    position: absolute;
+
+    right: 20px;
+
+    top: 20px;
+
+    height: 50px;
+
+    width: 200px;
+
+    font-size: 18px;
+
+    border-radius: 10px;
+
+
+
+}
+
+
+
+.texto_melhorias{
+
+
+
+    position: absolute;
+
+    right: 1px;
+
+    top: 20px;
+
+    height: 50px;
+
+    width: 200px;
+
+    font-size: 22px;
+
+    border-radius: 10px;
+
+}
+
+
+
+.estatisticas {
+
+    position: absolute;
+
+    left: 20px;
+
+    bottom: 20px;
+
+    width: 250px;
+
+    padding: 20px;
+
+    border: 2px solid black;
+
+    border-radius: 10px;
+
+    background-color: #eeeeee;
+
+}
+
+
+
+.estatisticas h2 {
+
+    text-align: center;
+
+}
+
+
+
+.estatisticas p {
+
+    font-size: 18px;}
+
+.valor{
+    text-align: center;
+    font-size: 24px;
+    }
+
+#aposta{
+    height: 50px;
+    border-radius: 10px;
+    font-size: 20px;
+    width: 150;
+    text-align: center;
+}
+
+#divida{
+    text-align: center;
+}
