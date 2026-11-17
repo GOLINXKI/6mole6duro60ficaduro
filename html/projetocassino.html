@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,13 +12,12 @@
     <header class="cabecalho">
         <div>
             <h1>🎰 Cassino Tycoon</h1>
-            <p>Consiga dinheiro e pague sua dívida antes do tempo acabar!</p>
+            <p>Consiga dinheiro e pague sua dívida!</p>
         </div>
 
         <div class="divida">
             <h3>Dívida total</h3>
             <h2 id="divida">R$ 11.000.000.000.000</h2>
-            <p>Tempo restante: <span id="timer">450</span>s</p>
             <button id="pagar_divida">Pagar dívida</button>
             <p id="estado">Você precisa quitar sua dívida!</p>
         </div>
@@ -68,7 +68,7 @@
             <label for="aposta">Valor da aposta:</label>
             <input type="number" id="aposta" min="1" value="10">
 
-            <button id="girar_roleta" class="botao-girar">GIRAR ROLETА</button>
+            <button id="girar_roleta" class="botao-girar">GIRAR ROLETA</button>
         </section>
 
         <aside class="painel melhorias">
@@ -87,6 +87,14 @@
                 <p>Preço: <strong id="custo_melhoria2">R$ 500,00</strong></p>
                 <button id="botao_melhoria2">Comprar</button>
             </div>
+
+            <div class="melhoria-item">
+                <h3>🤖 Roleta automática</h3>
+                <p>Desbloqueia os giros automáticos.</p>
+                <p>Preço: <strong id="custo_melhoria_auto">R$ 5.000,00</strong></p>
+                <button id="botao_melhoria_auto">Comprar</button>
+                <button id="ativar_auto" disabled>Ativar automático</button>
+            </div>
         </aside>
 
     </main>
@@ -95,7 +103,6 @@
         <h2>🏦 Sistema bancário</h2>
         <p>Contrate um banco para acessar poupança, empréstimos e investimentos.</p>
 
-        <!-- Este botão fica sempre disponível -->
         <button id="contratar_banco" class="botao-banco">
             Ver bancos disponíveis
         </button>

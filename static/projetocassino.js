@@ -14,10 +14,13 @@ let custo_melhoria1 = 200;
 let custo_melhoria2 = 500;
 
 let divida = 11000000000000;
-let tempo = 450;
 
 let girando = false;
 let jogoEncerrado = false;
+
+let roletaAutomaticaDesbloqueada = false;
+let roletaAutomaticaAtiva = false;
+let custo_melhoria_auto = 5000;
 
 const precoContratacao = 10000;
 
@@ -84,8 +87,17 @@ const imagem2 = document.getElementById("imagem2");
 const imagem3 = document.getElementById("imagem3");
 
 const elementoDivida = document.getElementById("divida");
-const elementoTimer = document.getElementById("timer");
 const elementoEstado = document.getElementById("estado");
+
+const botaoAbrirBancos = document.getElementById("contratar_banco");
+const selecaoBancos = document.getElementById("selecao_bancos");
+const painelBanco = document.getElementById("painel_banco");
+
+const botaoMelhoriaAuto =
+    document.getElementById("botao_melhoria_auto");
+
+const botaoAtivarAuto =
+    document.getElementById("ativar_auto");
 
 
 // ======================================
@@ -99,16 +111,24 @@ function dinheiro(valor) {
     });
 }
 
+function verificarJogo() {
+    return jogoEncerrado;
+}
+
 function atualizarTela() {
     elementoSaldo.textContent = dinheiro(saldo);
     elementoGiros.textContent = giros_totais;
     elementoMultiplicador.textContent = "x" + multiplicador;
 
-    const aposta = Math.max(0, Number(elementoAposta.value) || 0);
+    const aposta = Math.max(
+        0,
+        Number(elementoAposta.value) || 0
+    );
 
     ganho = aposta * multiplicador;
 
     elementoGanho.textContent = dinheiro(ganho);
+    elementoDivida.textContent = dinheiro(divida);
 
     document.getElementById("custo_melhoria1").textContent =
         dinheiro(custo_melhoria1);
@@ -116,13 +136,10 @@ function atualizarTela() {
     document.getElementById("custo_melhoria2").textContent =
         dinheiro(custo_melhoria2);
 
-    elementoDivida.textContent = dinheiro(divida);
+    document.getElementById("custo_melhoria_auto").textContent =
+        dinheiro(custo_melhoria_auto);
 
     atualizarBotoesBancos();
-}
-
-function verificarJogo() {
-    return jogoEncerrado;
 }
 
 
@@ -142,12 +159,14 @@ function girarRoleta() {
     const aposta = Number(elementoAposta.value);
 
     if (!Number.isFinite(aposta) || aposta <= 0) {
-        elementoResultado.textContent = "Digite uma aposta válida!";
+        elementoResultado.textContent =
+            "Digite uma aposta válida!";
         return;
     }
 
     if (aposta > saldo) {
-        elementoResultado.textContent = "Você não tem dinheiro suficiente!";
+        elementoResultado.textContent =
+            "Você não tem dinheiro suficiente!";
         return;
     }
 
@@ -180,6 +199,7 @@ function girarRoleta() {
     }, time);
 }
 
+
 function finalizarGiro(aposta) {
     giros_totais++;
 
@@ -194,6 +214,7 @@ function finalizarGiro(aposta) {
     elementoNumero.textContent = numero1 + 1;
 
     if (numero1 === numero2 && numero2 === numero3) {
+
         const premio = aposta * multiplicador;
 
         saldo += premio;
@@ -202,6 +223,7 @@ function finalizarGiro(aposta) {
             "🎉 VOCÊ GANHOU! Prêmio: " + dinheiro(premio);
 
     } else {
+
         saldo -= aposta;
 
         elementoResultado.textContent =
@@ -209,6 +231,26 @@ function finalizarGiro(aposta) {
     }
 
     atualizarTela();
+
+    // Continua girando automaticamente.
+    if (roletaAutomaticaAtiva && !jogoEncerrado) {
+
+        if (saldo >= aposta) {
+
+            setTimeout(() => {
+                girarRoleta();
+            }, 300);
+
+        } else {
+
+            roletaAutomaticaAtiva = false;
+
+            botaoAtivarAuto.textContent = "Ativar automático";
+
+            elementoResultado.textContent +=
+                " | Saldo insuficiente para continuar.";
+        }
+    }
 }
 
 
@@ -217,6 +259,7 @@ function finalizarGiro(aposta) {
 // ======================================
 
 document.getElementById("botao_melhoria1").addEventListener("click", () => {
+
     if (verificarJogo()) return;
 
     if (saldo < custo_melhoria1) {
@@ -244,6 +287,7 @@ document.getElementById("botao_melhoria1").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("botao_melhoria2").addEventListener("click", () => {
+
     if (verificarJogo()) return;
 
     if (saldo < custo_melhoria2) {
@@ -262,10 +306,65 @@ document.getElementById("botao_melhoria2").addEventListener("click", () => {
 
 
 // ======================================
-// DÍVIDA
+// MELHORIA DE ROLETA AUTOMÁTICA
+// ======================================
+
+botaoMelhoriaAuto.addEventListener("click", () => {
+
+    if (verificarJogo()) return;
+
+    if (roletaAutomaticaDesbloqueada) {
+        alert("Você já comprou essa melhoria!");
+        return;
+    }
+
+    if (saldo < custo_melhoria_auto) {
+        alert("Dinheiro insuficiente!");
+        return;
+    }
+
+    saldo -= custo_melhoria_auto;
+
+    roletaAutomaticaDesbloqueada = true;
+
+    botaoMelhoriaAuto.disabled = true;
+    botaoMelhoriaAuto.textContent = "Comprada";
+
+    botaoAtivarAuto.disabled = false;
+
+    atualizarTela();
+});
+
+
+botaoAtivarAuto.addEventListener("click", () => {
+
+    if (verificarJogo()) return;
+
+    if (!roletaAutomaticaDesbloqueada) return;
+
+    roletaAutomaticaAtiva = !roletaAutomaticaAtiva;
+
+    if (roletaAutomaticaAtiva) {
+
+        botaoAtivarAuto.textContent = "Desativar automático";
+
+        if (!girando) {
+            girarRoleta();
+        }
+
+    } else {
+
+        botaoAtivarAuto.textContent = "Ativar automático";
+    }
+});
+
+
+// ======================================
+// PAGAR DÍVIDA
 // ======================================
 
 document.getElementById("pagar_divida").addEventListener("click", () => {
+
     if (verificarJogo()) return;
 
     if (saldo <= 0) {
@@ -282,35 +381,21 @@ document.getElementById("pagar_divida").addEventListener("click", () => {
 
     if (divida <= 0) {
         divida = 0;
-        encerrarJogo(true);
+        encerrarJogo();
     }
 });
 
 
 // ======================================
-// SISTEMA DE TEMPO
+// ENCERRAR JOGO
 // ======================================
 
-const contagem = setInterval(() => {
-    if (jogoEncerrado) return;
+function encerrarJogo() {
 
-    tempo--;
-
-    elementoTimer.textContent = tempo;
-
-    if (tempo <= 0) {
-        tempo = 0;
-        encerrarJogo(false);
-    }
-}, 1000);
-
-
-function encerrarJogo(vitoria) {
     if (jogoEncerrado) return;
 
     jogoEncerrado = true;
-
-    clearInterval(contagem);
+    roletaAutomaticaAtiva = false;
 
     document.querySelectorAll("button").forEach(botao => {
         botao.disabled = true;
@@ -318,15 +403,10 @@ function encerrarJogo(vitoria) {
 
     elementoAposta.disabled = true;
 
-    if (vitoria) {
-        elementoEstado.textContent = "🏆 PARABÉNS! Você pagou toda a dívida!";
-        elementoResultado.textContent = "VOCÊ VENCEU!";
-    } else {
-        elementoEstado.textContent =
-            "💀 O tempo acabou! Você não conseguiu pagar a dívida.";
+    elementoEstado.textContent =
+        "🏆 PARABÉNS! Você pagou toda a dívida!";
 
-        elementoResultado.textContent = "FIM DE JOGO!";
-    }
+    elementoResultado.textContent = "VOCÊ VENCEU!";
 }
 
 
@@ -334,18 +414,18 @@ function encerrarJogo(vitoria) {
 // SISTEMA DE BANCOS
 // ======================================
 
-const botaoAbrirBancos = document.getElementById("contratar_banco");
-const selecaoBancos = document.getElementById("selecao_bancos");
-const painelBanco = document.getElementById("painel_banco");
-
 botaoAbrirBancos.addEventListener("click", () => {
+
     if (verificarJogo()) return;
 
     selecaoBancos.hidden = !selecaoBancos.hidden;
 });
 
+
 function atualizarBotoesBancos() {
+
     document.querySelectorAll(".contratar").forEach(botao => {
+
         botao.disabled =
             verificarJogo() ||
             bancoAtual !== null ||
@@ -359,8 +439,15 @@ function atualizarBotoesBancos() {
     });
 }
 
+
+// ======================================
+// CONTRATAR BANCO
+// ======================================
+
 document.querySelectorAll(".contratar").forEach(botao => {
+
     botao.addEventListener("click", () => {
+
         if (verificarJogo()) return;
 
         if (bancoAtual !== null) {
@@ -390,7 +477,6 @@ document.querySelectorAll(".contratar").forEach(botao => {
 
         atualizarBanco();
         atualizarTela();
-        atualizarBotoesBancos();
     });
 });
 
@@ -400,6 +486,7 @@ document.querySelectorAll(".contratar").forEach(botao => {
 // ======================================
 
 function atualizarBanco() {
+
     if (bancoAtual === null) return;
 
     document.getElementById("dinheiro_poupanca").textContent =
@@ -428,10 +515,11 @@ function atualizarBanco() {
 
 
 // ======================================
-// DEPÓSITO NA POUPANÇA
+// DEPOSITAR NA POUPANÇA
 // ======================================
 
 document.getElementById("depositar").addEventListener("click", () => {
+
     if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
@@ -463,6 +551,7 @@ document.getElementById("depositar").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("retirar").addEventListener("click", () => {
+
     if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
@@ -494,6 +583,7 @@ document.getElementById("retirar").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("pedir_emprestimo").addEventListener("click", () => {
+
     if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
@@ -527,6 +617,7 @@ document.getElementById("pedir_emprestimo").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("pagar_emprestimo").addEventListener("click", () => {
+
     if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
@@ -563,6 +654,7 @@ document.getElementById("pagar_emprestimo").addEventListener("click", () => {
 // ======================================
 
 function atualizarBolsa() {
+
     if (bancoAtual === null) return;
 
     variacaoAcao = (Math.random() * 6) - 3;
@@ -580,7 +672,8 @@ function atualizarBolsa() {
     document.getElementById("preco_acao").textContent =
         dinheiro(precoAcao);
 
-    const elementoVariacao = document.getElementById("variacao_acao");
+    const elementoVariacao =
+        document.getElementById("variacao_acao");
 
     elementoVariacao.textContent =
         variacaoAcao.toFixed(2) + "%";
@@ -598,6 +691,7 @@ function atualizarBolsa() {
 // ======================================
 
 function desenharGrafico() {
+
     const canvas = document.getElementById("grafico_acoes");
     const contexto = canvas.getContext("2d");
 
@@ -615,6 +709,7 @@ function desenharGrafico() {
     contexto.lineWidth = 1;
 
     for (let i = 1; i < 4; i++) {
+
         const y = (altura / 4) * i;
 
         contexto.beginPath();
@@ -626,7 +721,9 @@ function desenharGrafico() {
     contexto.beginPath();
 
     historicoAcoes.forEach((preco, indice) => {
-        const x = (indice / Math.max(historicoAcoes.length - 1, 1))
+
+        const x =
+            (indice / Math.max(historicoAcoes.length - 1, 1))
             * largura;
 
         const y = altura - (
@@ -651,6 +748,7 @@ function desenharGrafico() {
 // ======================================
 
 document.getElementById("comprar_acoes").addEventListener("click", () => {
+
     if (verificarJogo() || bancoAtual === null) return;
 
     const quantidade = Number(
@@ -689,6 +787,7 @@ document.getElementById("comprar_acoes").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("vender_acoes").addEventListener("click", () => {
+
     if (verificarJogo() || bancoAtual === null) return;
 
     const quantidade = Number(
@@ -727,11 +826,14 @@ document.getElementById("vender_acoes").addEventListener("click", () => {
 // ======================================
 
 setInterval(() => {
+
     if (jogoEncerrado || bancoAtual === null) return;
 
-    dinheiroPoupanca += dinheiroPoupanca * bancoAtual.poupanca;
+    dinheiroPoupanca +=
+        dinheiroPoupanca * bancoAtual.poupanca;
 
-    dividaBanco += dividaBanco * bancoAtual.juros;
+    dividaBanco +=
+        dividaBanco * bancoAtual.juros;
 
     atualizarBanco();
 
@@ -743,6 +845,7 @@ setInterval(() => {
 // ======================================
 
 setInterval(() => {
+
     if (jogoEncerrado) return;
 
     atualizarBolsa();
