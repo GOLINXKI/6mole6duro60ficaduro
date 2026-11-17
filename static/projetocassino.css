@@ -1,4 +1,6 @@
 
+/* CONFIGURAÇÕES GERAIS */
+
 * {
     margin: 0;
     padding: 0;
@@ -12,36 +14,77 @@ body {
     min-height: 100vh;
 }
 
+button {
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #3778d5;
+}
+
 /* CABEÇALHO */
 
 .cabecalho {
     text-align: center;
-    padding: 25px;
+    padding: 25px 15px;
 }
 
 .cabecalho > h1 {
-    font-size: 36px;
+    font-size: 38px;
     margin-bottom: 20px;
+    letter-spacing: 3px;
 }
 
 .divida {
-    background: white;
-    max-width: 650px;
+    max-width: 700px;
     margin: auto;
     padding: 20px;
+    background: white;
     border-radius: 15px;
-    box-shadow: 0 4px 12px #0002;
+    box-shadow: 0 4px 15px #0002;
 }
 
 .divida h2 {
     margin: 10px;
 }
 
-#estado {
+.divida h3 {
     margin-top: 15px;
+    font-size: 16px;
 }
 
-/* LAYOUT PRINCIPAL */
+#pagar_divida {
+    background: #d93636;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* LAYOUT DO CASSINO */
 
 .layout {
     display: grid;
@@ -51,42 +94,39 @@ body {
     padding: 30px;
 }
 
-/* ESTATÍSTICAS */
-
-.estatisticas {
+.painel {
     background: white;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 12px #0002;
+    box-shadow: 0 4px 15px #0002;
 }
 
-.estatisticas h2 {
+.estatisticas h2,
+.painel-melhorias h2 {
     text-align: center;
     margin-bottom: 20px;
 }
 
 .estatisticas p {
+    margin: 16px 0;
     font-size: 17px;
-    margin: 15px 0;
+    overflow-wrap: anywhere;
 }
 
-/* JOGO CENTRAL */
+/* JOGO */
 
 .jogo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
     gap: 25px;
 }
 
 #resultado {
     font-size: 32px;
-    margin-bottom: 10px;
+    min-height: 38px;
 }
-
-/* IMAGENS */
 
 .imagens {
     display: flex;
@@ -101,32 +141,28 @@ body {
     height: 130px;
     object-fit: contain;
     background: white;
-    border-radius: 15px;
     padding: 10px;
+    border-radius: 15px;
     box-shadow: 0 4px 12px #0002;
 }
 
 /* BOTÃO GIRAR */
 
-.botao-clique_em_mim {
-    width: 150px;
+.botao-girar {
     height: 150px;
+    width: 150px;
     border-radius: 50%;
     background: linear-gradient(145deg, #ff453a, #d90000);
     color: white;
     font-size: 25px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 7px 0 #a50000;
-    transition: 0.2s;
+    box-shadow: 0 8px 0 #a50000;
 }
 
-.botao-clique_em_mim:hover {
-    transform: scale(1.08);
+.botao-girar:hover:not(:disabled) {
+    transform: scale(1.07);
 }
 
-.botao-clique_em_mim:active {
+.botao-girar:active {
     transform: scale(0.95);
 }
 
@@ -136,85 +172,231 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
+    width: 200px;
 }
 
 #aposta {
-    width: 150px;
-    height: 45px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-    font-size: 20px;
     text-align: center;
 }
 
 /* MELHORIAS */
-
-.painel-melhorias {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px #0002;
-}
-
-.painel-melhorias h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
 
 .melhoria-item {
     text-align: center;
     margin-bottom: 25px;
 }
 
+.melhoria-item h3 {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
 .melhorias {
     width: 100%;
-    min-height: 50px;
-    padding: 10px;
+    padding: 15px 8px;
     border-radius: 10px;
     background: linear-gradient(135deg, #ffb347, #ff8008);
     color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
+    font-size: 15px;
+}
+
+/* MERCADO FINANCEIRO */
+
+.banco-area {
+    margin: 40px 30px;
+    padding: 30px;
+    background: #e4e8ef;
+    border: 1px solid #cbd3df;
+    border-radius: 20px;
+}
+
+.banco-introducao {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.banco-introducao h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.banco-introducao p {
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.banco-introducao h2 {
+    color: #176b40;
+}
+
+/* ESCOLHA DOS BANCOS */
+
+#contratar_banco > h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.bancos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.banco-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px #0002;
+    border: 2px solid transparent;
     transition: 0.2s;
 }
 
-.melhorias:hover {
-    transform: scale(1.05);
+.banco-card:hover {
+    transform: translateY(-5px);
+    border-color: #3778d5;
 }
 
-.melhoria-item h3 {
-    margin-top: 10px;
-    font-size: 20px;
+.banco-card h2 {
+    margin-bottom: 12px;
+    font-size: 23px;
 }
 
-/* BOTÕES GERAIS */
-
-button {
-    cursor: pointer;
-    transition: 0.2s;
+.banco-card p {
+    color: #666;
+    margin-bottom: 20px;
 }
 
-#pagar_divida {
-    padding: 12px 25px;
-    border-radius: 10px;
-    background: #e53935;
+.banco-card ul {
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 25px;
+    line-height: 2;
+}
+
+.banco-card.destaque {
+    border-color: #e4a72c;
+}
+
+.contratar {
+    width: 100%;
+    padding: 14px;
+    background: #176b40;
     color: white;
-    font-size: 17px;
-    border: none;
+    border-radius: 9px;
+    font-size: 16px;
 }
 
-#pagar_divida:hover {
-    background: #c62828;
+/* PAINEL DO BANCO */
+
+.banco-titulo {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.banco-titulo h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.financeiro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.financeiro-card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px #0002;
+}
+
+.financeiro-card h2 {
+    margin-bottom: 20px;
+}
+
+.financeiro-card p {
+    margin: 12px 0;
+    overflow-wrap: anywhere;
+}
+
+.financeiro-card h3 {
+    color: #176b40;
+    margin: 10px 0;
+}
+
+.financeiro-card > button {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: #286bc0;
+    color: white;
+    font-size: 15px;
+}
+
+.acoes-banco {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.acoes-banco button {
+    flex: 1;
+    padding: 12px 5px;
+    border-radius: 8px;
+    background: #176b40;
+    color: white;
+    font-size: 14px;
+}
+
+.acoes-banco button:last-child {
+    background: #b63b3b;
+}
+
+/* BOLSA DE VALORES */
+
+.bolsa-card {
+    grid-column: span 1;
+}
+
+#grafico_acoes {
+    display: block;
+    width: 100%;
+    height: 180px;
+    background: #f5f7fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.carteira {
+    background: #f1f4f8;
+    padding: 12px;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+#mensagem_acoes {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.aviso-banco {
+    text-align: center;
+    color: #666;
+    margin-top: 25px;
+    font-size: 13px;
 }
 
 /* RESPONSIVIDADE */
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
+
     .layout {
         grid-template-columns: 1fr 1fr;
     }
@@ -223,9 +405,18 @@ button {
         grid-column: 1 / -1;
         grid-row: 1;
     }
+
+    .financeiro-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bancos {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
+
     .layout {
         display: flex;
         flex-direction: column;
@@ -250,7 +441,25 @@ button {
         height: 90px;
     }
 
-    .cabecalho {
+    .banco-area {
+        margin: 20px 10px;
         padding: 15px;
+    }
+
+    .bancos,
+    .financeiro-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cabecalho > h1 {
+        font-size: 27px;
+    }
+
+    .banco-introducao h1 {
+        font-size: 25px;
+    }
+
+    .acoes-banco {
+        flex-direction: column;
     }
 }
