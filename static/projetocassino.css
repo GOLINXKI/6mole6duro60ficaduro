@@ -1,331 +1,215 @@
-body{
-    background-color: rgb(216, 212, 212);
+
+/* CONFIGURAÇÕES GERAIS */
+* {
+    box-sizing: border-box;
 }
 
-
-
-.botao-clique_em_mim{
-
-    height: 150px;
-
-    width: 150px;
-
-    font-size: 24px;
-
-    border-radius: 200px;
-
-    color: white;
-
-    background-color: rgb(255, 33, 3);
-
-    display: block;
-
-    margin: 0 auto;
-
-    margin-top: 40px;
-
-    border: none;
-    
-
+body {
+    background: linear-gradient(135deg, #d6d3d3, #eeeeee);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    color: #292929;
 }
 
-button{
-    transition: 0.1s;
-    border: none;
-}
-
-input{
-    border: none;
-}
-
-button:hover{
-    transform: scale(1.1);
-}
-
-
-
-.imagens{
-
-    display: flex;
-
-    justify-content: center;
-
-    size: 200px
-
-
-}
-
-
-
-.centro{
-
-    text-align: center;
-
-}
-
-
-
-.vitoria{
-
-    position: absolute;
-
-    right: 20px;
-
-    bottom: 20px;
-
-}
-
-
-
-.saldo{
-
-    position: absolute;
-
-    left: 20px;
-
-    top: 20px;
-
-}
-
-.melhorias{
-
-
-
-    position: absolute;
-
-    right: 20px;
-
-    top: 20px;
-
-    height: 50px;
-
-    width: 200px;
-
-    font-size: 18px;
-
-    border-radius: 10px;
-
-
-
-}
-
-
-
-.texto_melhorias{
-
-
-
-    position: absolute;
-
-    right: 1px;
-
-    top: 20px;
-
-    height: 50px;
-
-    width: 200px;
-
-    font-size: 18px;
-
-    border-radius: 10px;
-
-}
-
-
-
+/* ESTATÍSTICAS */
 .estatisticas {
-
     position: absolute;
-
     left: 20px;
-
     bottom: 20px;
-
-    width: 250px;
-
+    width: 270px;
     padding: 20px;
-
-    border: 2px solid black;
-
-    border-radius: 10px;
-
-    background-color: #eeeeee;
-
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
-
-
 
 .estatisticas h2 {
-
     text-align: center;
-
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
 }
-
-
 
 .estatisticas p {
-
-    font-size: 18px;
-
-}.botao-clique_em_mim{
-
-    height: 150px;
-
-    width: 150px;
-
-    font-size: 24px;
-
-    border-radius: 200px;
-
-    color: white;
-
-    background-color: rgb(255, 33, 3);
-
-    display: block;
-
-    margin: 0 auto;
-
-    margin-top: 40px;
-
+    font-size: 17px;
+    margin: 15px 0;
 }
 
-
-
-.imagens{
-
-    display: flex;
-
-    justify-content: center;
-
-    size: 200px
-
-}
-
-
-
-.centro{
-
+/* DÍVIDA E TEMPORIZADOR */
+#divida {
     text-align: center;
-
+    font-weight: bold;
+    color: #292929;
 }
 
-
-
-.vitoria{
-
-    position: absolute;
-
-    right: 20px;
-
-    bottom: 20px;
-
-}
-
-
-
-.saldo{
-
-    position: absolute;
-
-    left: 20px;
-
-    top: 20px;
-
-}
-
-.melhorias{
-
-
-
-    position: absolute;
-
-    right: 20px;
-
-    top: 20px;
-
-    height: 50px;
-
-    width: 200px;
-
-    font-size: 18px;
-
+#divida button,
+#pagar_divida {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #ff453a, #d90000);
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
     border-radius: 10px;
-
-
-
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
 }
 
+#pagar_divida:hover {
+    transform: scale(1.08);
+}
 
+/* TÍTULO E RESULTADO */
+.centro {
+    text-align: center;
+}
 
-.texto_melhorias{
+#resultado {
+    margin-top: 30px;
+    font-size: 32px;
+    color: #333;
+}
 
+/* IMAGENS */
+.imagens {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
 
+.imagens img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    border-radius: 15px;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+}
 
-    position: absolute;
+/* BOTÃO GIRAR */
+.botao-clique_em_mim {
+    height: 150px;
+    width: 150px;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 50%;
+    color: white;
+    background: linear-gradient(145deg, #ff453a, #d90000);
+    display: block;
+    margin: 40px auto;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #a50000,
+                0 12px 20px rgba(0,0,0,0.2);
+    transition: 0.15s ease;
+}
 
-    right: 1px;
+.botao-clique_em_mim:hover {
+    transform: scale(1.08);
+}
 
-    top: 20px;
+.botao-clique_em_mim:active {
+    transform: scale(0.95);
+}
 
-    height: 50px;
-
-    width: 200px;
-
+/* VALOR DA APOSTA */
+.valor {
+    text-align: center;
     font-size: 22px;
-
-    border-radius: 10px;
-
+    font-weight: bold;
+    margin-top: 10px;
 }
 
-
-
-.estatisticas {
-
-    position: absolute;
-
-    left: 20px;
-
-    bottom: 20px;
-
-    width: 250px;
-
-    padding: 20px;
-
-    border: 2px solid black;
-
-    border-radius: 10px;
-
-    background-color: #eeeeee;
-
-}
-
-
-
-.estatisticas h2 {
-
-    text-align: center;
-
-}
-
-
-
-.estatisticas p {
-
-    font-size: 18px;}
-
-.valor{
-    text-align: center;
-    font-size: 24px;
-    }
-
-#aposta{
+#aposta {
     height: 50px;
+    width: 150px;
     border-radius: 10px;
     font-size: 20px;
-    width: 150;
     text-align: center;
+    border: 2px solid #ccc;
+    outline: none;
 }
 
-#divida{
+#aposta:focus {
+    border-color: #ff453a;
+}
+
+/* MELHORIAS */
+.melhorias {
+    position: absolute;
+    right: 70px;
+    height: 55px;
+    width: 200px;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ffb347, #ff8008);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: 0.2s;
+}
+
+.melhorias:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ffc46b, #ff922b);
+}
+
+/* PREÇO DAS MELHORIAS */
+.texto_melhorias {
+    position: absolute;
+    right: 70px;
+    width: 200px;
     text-align: center;
+    font-size: 22px;
+    color: #333;
+}
+
+/* BOTÕES GERAIS */
+button {
+    border: none;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 700px) {
+
+    .estatisticas {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .melhorias {
+        position: relative;
+        right: auto;
+        display: block;
+        margin: 15px auto !important;
+    }
+
+    .texto_melhorias {
+        position: relative;
+        right: auto;
+        margin: 0 auto !important;
+    }
+
+    .imagens {
+        gap: 5px;
+    }
+
+    .imagens img {
+        width: 90px;
+        height: 90px;
+    }
+
+    #divida {
+        padding: 10px;
+    }
 }
