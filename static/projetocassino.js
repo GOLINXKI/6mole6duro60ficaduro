@@ -1,3 +1,4 @@
+
 // ======================================
 // CONFIGURAÇÕES INICIAIS
 // ======================================
@@ -8,7 +9,7 @@ let giros_totais = 0;
 let multiplicador = 100;
 let ganho = 0;
 
-let time = 75;
+let time = 150;
 let custo_melhoria1 = 200;
 let custo_melhoria2 = 500;
 
@@ -116,14 +117,12 @@ function atualizarTela() {
         dinheiro(custo_melhoria2);
 
     elementoDivida.textContent = dinheiro(divida);
+
+    atualizarBotoesBancos();
 }
 
 function verificarJogo() {
-    if (jogoEncerrado) {
-        return true;
-    }
-
-    return false;
+    return jogoEncerrado;
 }
 
 
@@ -159,6 +158,7 @@ function girarRoleta() {
 
     let trocas = 0;
 
+    // 10 trocas de 150 ms = aproximadamente 1,5 segundo.
     const intervalo = setInterval(() => {
         imagem1.src = codig[Math.floor(Math.random() * codig.length)];
         imagem2.src = codig[Math.floor(Math.random() * codig.length)];
@@ -166,7 +166,7 @@ function girarRoleta() {
 
         trocas++;
 
-        if (trocas >= 30) {
+        if (trocas >= 10) {
             clearInterval(intervalo);
 
             finalizarGiro(aposta);
@@ -194,8 +194,6 @@ function finalizarGiro(aposta) {
     elementoNumero.textContent = numero1 + 1;
 
     if (numero1 === numero2 && numero2 === numero3) {
-
-        // Prêmio: 100 vezes a aposta
         const premio = aposta * multiplicador;
 
         saldo += premio;
@@ -204,7 +202,6 @@ function finalizarGiro(aposta) {
             "🎉 VOCÊ GANHOU! Prêmio: " + dinheiro(premio);
 
     } else {
-
         saldo -= aposta;
 
         elementoResultado.textContent =
@@ -305,7 +302,6 @@ const contagem = setInterval(() => {
         tempo = 0;
         encerrarJogo(false);
     }
-
 }, 1000);
 
 
@@ -326,7 +322,9 @@ function encerrarJogo(vitoria) {
         elementoEstado.textContent = "🏆 PARABÉNS! Você pagou toda a dívida!";
         elementoResultado.textContent = "VOCÊ VENCEU!";
     } else {
-        elementoEstado.textContent = "💀 O tempo acabou! Você não conseguiu pagar a dívida.";
+        elementoEstado.textContent =
+            "💀 O tempo acabou! Você não conseguiu pagar a dívida.";
+
         elementoResultado.textContent = "FIM DE JOGO!";
     }
 }
@@ -340,15 +338,12 @@ const botaoAbrirBancos = document.getElementById("contratar_banco");
 const selecaoBancos = document.getElementById("selecao_bancos");
 const painelBanco = document.getElementById("painel_banco");
 
-// O botão de abrir os bancos nunca depende do saldo.
 botaoAbrirBancos.addEventListener("click", () => {
     if (verificarJogo()) return;
 
     selecaoBancos.hidden = !selecaoBancos.hidden;
 });
 
-
-// Atualiza os botões de contratação sem escondê-los.
 function atualizarBotoesBancos() {
     document.querySelectorAll(".contratar").forEach(botao => {
         botao.disabled =
@@ -364,10 +359,7 @@ function atualizarBotoesBancos() {
     });
 }
 
-
-// Contratar um banco.
 document.querySelectorAll(".contratar").forEach(botao => {
-
     botao.addEventListener("click", () => {
         if (verificarJogo()) return;
 
@@ -400,7 +392,6 @@ document.querySelectorAll(".contratar").forEach(botao => {
         atualizarTela();
         atualizarBotoesBancos();
     });
-
 });
 
 
@@ -441,8 +432,7 @@ function atualizarBanco() {
 // ======================================
 
 document.getElementById("depositar").addEventListener("click", () => {
-    if (verificarJogo()) return;
-    if (bancoAtual === null) return;
+    if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
         document.getElementById("valor_poupanca").value
@@ -473,8 +463,7 @@ document.getElementById("depositar").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("retirar").addEventListener("click", () => {
-    if (verificarJogo()) return;
-    if (bancoAtual === null) return;
+    if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
         document.getElementById("valor_poupanca").value
@@ -505,8 +494,7 @@ document.getElementById("retirar").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("pedir_emprestimo").addEventListener("click", () => {
-    if (verificarJogo()) return;
-    if (bancoAtual === null) return;
+    if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
         document.getElementById("valor_emprestimo").value
@@ -539,8 +527,7 @@ document.getElementById("pedir_emprestimo").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("pagar_emprestimo").addEventListener("click", () => {
-    if (verificarJogo()) return;
-    if (bancoAtual === null) return;
+    if (verificarJogo() || bancoAtual === null) return;
 
     const valor = Number(
         document.getElementById("valor_pagamento").value
@@ -578,14 +565,10 @@ document.getElementById("pagar_emprestimo").addEventListener("click", () => {
 function atualizarBolsa() {
     if (bancoAtual === null) return;
 
-    const precoAnterior = precoAcao;
-
-    // Variação aleatória entre -3% e +3%.
     variacaoAcao = (Math.random() * 6) - 3;
 
     precoAcao = precoAcao * (1 + variacaoAcao / 100);
 
-    // Evita que o preço fique próximo de zero.
     precoAcao = Math.max(1, precoAcao);
 
     historicoAcoes.push(precoAcao);
@@ -628,7 +611,6 @@ function desenharGrafico() {
 
     const diferenca = Math.max(maximo - minimo, 1);
 
-    // Linhas de referência.
     contexto.strokeStyle = "#ffffff22";
     contexto.lineWidth = 1;
 
@@ -641,7 +623,6 @@ function desenharGrafico() {
         contexto.stroke();
     }
 
-    // Linha do gráfico.
     contexto.beginPath();
 
     historicoAcoes.forEach((preco, indice) => {
@@ -670,8 +651,7 @@ function desenharGrafico() {
 // ======================================
 
 document.getElementById("comprar_acoes").addEventListener("click", () => {
-    if (verificarJogo()) return;
-    if (bancoAtual === null) return;
+    if (verificarJogo() || bancoAtual === null) return;
 
     const quantidade = Number(
         document.getElementById("quantidade_compra").value
@@ -683,9 +663,7 @@ document.getElementById("comprar_acoes").addEventListener("click", () => {
     }
 
     const valorCompra = quantidade * precoAcao;
-
     const taxa = valorCompra * bancoAtual.taxa;
-
     const custoTotal = valorCompra + taxa;
 
     if (custoTotal > saldo) {
@@ -711,8 +689,7 @@ document.getElementById("comprar_acoes").addEventListener("click", () => {
 // ======================================
 
 document.getElementById("vender_acoes").addEventListener("click", () => {
-    if (verificarJogo()) return;
-    if (bancoAtual === null) return;
+    if (verificarJogo() || bancoAtual === null) return;
 
     const quantidade = Number(
         document.getElementById("quantidade_compra").value
@@ -729,9 +706,7 @@ document.getElementById("vender_acoes").addEventListener("click", () => {
     }
 
     const valorVenda = quantidade * precoAcao;
-
     const taxa = valorVenda * bancoAtual.taxa;
-
     const valorFinal = valorVenda - taxa;
 
     saldo += valorFinal;
@@ -754,10 +729,8 @@ document.getElementById("vender_acoes").addEventListener("click", () => {
 setInterval(() => {
     if (jogoEncerrado || bancoAtual === null) return;
 
-    // Rendimento da poupança.
     dinheiroPoupanca += dinheiroPoupanca * bancoAtual.poupanca;
 
-    // Juros da dívida bancária.
     dividaBanco += dividaBanco * bancoAtual.juros;
 
     atualizarBanco();
