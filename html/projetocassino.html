@@ -1,68 +1,97 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='projetocassino.css') }}">
+
     <title>Cassino</title>
 </head>
 
-
 <body>
 
-<div class="estatisticas">
-    <h2>Estatísticas</h2>
+    <header class="cabecalho">
+        <h1>CASSINO</h1>
 
-    <p>Saldo: <span id="saldo">1000</span></p>
-    <p>Giros: <span id="giros_totais">0</span></p>
-    <p>Vitórias: <span id="numero">0</span></p>
-    <p>Multiplicador: <span id="custo_giro">1</span></p>
-    <p>Ganho por giro: <span id="ganho_giro">1000</span></p>
-</div>
+        <div class="divida">
+            <h2>Tempo restante: <span id="timer">450</span>s</h2>
 
+            <h2>Dívida: R$ <span id="divida">11000000000000</span></h2>
 
-<div id="painel-divida">
-    <h2>Tempo restante: <span id="timer">450</span>s</h2>
+            <button id="pagar_divida">Pagar dívida</button>
 
-    <h2>Dívida: R$ <span id="divida">11000000000000</span></h2>
+            <h3 id="estado">
+                Pague a dívida do Brasil antes que as bets acabem!
+            </h3>
+        </div>
+    </header>
 
-    <button id="pagar_divida">Pagar dívida</button>
+    <main class="layout">
 
-    <h2 id="estado">Pague a divida do Brasil antes que o lula proiba as bets!!!</h2>
-</div><br><br><br><br>
+        <!-- ESTATÍSTICAS -->
+        <aside class="estatisticas">
+            <h2>Estatísticas</h2>
 
+            <p>Saldo: <span id="saldo">1000</span></p>
+            <p>Giros: <span id="giros_totais">0</span></p>
+            <p>Vitórias: <span id="numero">0</span></p>
+            <p>Multiplicador: <span id="custo_giro">1</span></p>
+            <p>Ganho por giro: <span id="ganho_giro">1000</span></p>
+        </aside>
 
-<h1 class="centro" id="resultado">Boa sorte</h1>
-<div class="imagens" id="imagens">
-    <img src= "{{ url_for('static', filename='alex.png') }}" id="imagem1">
-    <img src= "{{ url_for('static', filename='alex.png') }}" id="imagem2">
-    <img src= "{{ url_for('static', filename='alex.png') }}" id="imagem3">
-</div>
+        <!-- JOGO CENTRAL -->
+        <section class="jogo">
 
+            <h1 id="resultado">Boa sorte!</h1>
 
-<div >
-    <button id="girar_roleta" class="botao-clique_em_mim">Girar</button>
-    
-</div>
+            <div class="imagens" id="imagens">
+                <img src="{{ url_for('static', filename='alex.png') }}" id="imagem1">
+                <img src="{{ url_for('static', filename='alex.png') }}" id="imagem2">
+                <img src="{{ url_for('static', filename='alex.png') }}" id="imagem3">
+            </div>
 
-<div class="valor">
-    <br><br><br><br><br>
-    <label for="aposta">Valor da aposta:</label><br><br>
-    <input type="number" id="aposta" value="10" min="1">
-</div>
+            <button id="girar_roleta" class="botao-clique_em_mim">
+                GIRAR
+            </button>
 
-<div>
-    <button class="melhorias" id="botao_melhoria2"style="margin-top: 100px; margin-right: 70px;" >Melhorar a recompensa</button>
-    <h3 class="texto_melhorias" id="custo_melhoria2" style="margin-top: 150px;">200</h3>
-</div>
+            <div class="valor">
+                <label for="aposta">Valor da aposta:</label>
 
-<div> 
-    <button class="melhorias" id="botao_melhoria1"style="margin-top: 200px; margin-right: 70px;" >Velocidade do giro</button>
-    <h3 class="texto_melhorias" id="custo_melhoria1" style="margin-top: 250px;">200</h3>
-</div>
+                <input type="number" id="aposta" value="10" min="1">
+            </div>
 
+        </section>
 
-<script src="{{ url_for('static', filename='projetocassino.js') }}"></script>
+        <!-- MELHORIAS -->
+        <aside class="painel-melhorias">
+
+            <h2>Melhorias</h2>
+
+            <div class="melhoria-item">
+                <button class="melhorias" id="botao_melhoria2">
+                    Melhorar recompensa
+                </button>
+
+                <h3 id="custo_melhoria2">200</h3>
+            </div>
+
+            <div class="melhoria-item">
+                <button class="melhorias" id="botao_melhoria1">
+                    Velocidade do giro
+                </button>
+
+                <h3 id="custo_melhoria1">200</h3>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='projetocassino.js') }}"></script>
 
 </body>
 </html>
+```
