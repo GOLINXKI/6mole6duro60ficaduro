@@ -1,245 +1,212 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='projetocassino.css') }}">
-
     <title>Cassino Tycoon</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='projetocassino.css') }}">
 </head>
-
 <body>
 
     <header class="cabecalho">
-        <h1>CASSINO TYCOON</h1>
+        <div>
+            <h1>🎰 Cassino Tycoon</h1>
+            <p>Consiga dinheiro e pague sua dívida antes do tempo acabar!</p>
+        </div>
 
-        <section class="divida">
-            <h2>Tempo restante: <span id="timer">450</span>s</h2>
-            <h2>Dívida: <span id="divida">R$ 11.000.000.000.000,00</span></h2>
-
+        <div class="divida">
+            <h3>Dívida total</h3>
+            <h2 id="divida">R$ 11.000.000.000.000</h2>
+            <p>Tempo restante: <span id="timer">450</span>s</p>
             <button id="pagar_divida">Pagar dívida</button>
-
-            <h3 id="estado">
-                Pague a dívida antes que o governo proíba as bets!
-            </h3>
-        </section>
+            <p id="estado">Você precisa quitar sua dívida!</p>
+        </div>
     </header>
 
     <main class="layout">
 
-        <!-- ESTATÍSTICAS -->
-        <aside class="estatisticas painel">
-            <h2>Estatísticas</h2>
+        <aside class="painel estatisticas">
+            <h2>📊 Estatísticas</h2>
 
-            <p>Saldo: <span id="saldo">1000</span></p>
-            <p>Giros: <span id="giros_totais">0</span></p>
-            <p>Vitórias: <span id="numero">0</span></p>
-            <p>Multiplicador: <span id="custo_giro">1x</span></p>
-            <p>Ganho por giro: <span id="ganho_giro">1000</span></p>
+            <div class="estatistica">
+                <span>Saldo</span>
+                <strong id="saldo">R$ 1.000,00</strong>
+            </div>
+
+            <div class="estatistica">
+                <span>Giros totais</span>
+                <strong id="giros_totais">0</strong>
+            </div>
+
+            <div class="estatistica">
+                <span>Número da sorte</span>
+                <strong id="numero">0</strong>
+            </div>
+
+            <div class="estatistica">
+                <span>Multiplicador</span>
+                <strong id="multiplicador">x100</strong>
+            </div>
+
+            <div class="estatistica">
+                <span>Prêmio possível</span>
+                <strong id="ganho_giro">R$ 0,00</strong>
+            </div>
         </aside>
 
-        <!-- CASSINO -->
-        <section class="jogo">
+        <section class="jogo painel">
+            <h2>🎰 Roleta</h2>
 
-            <h2 id="resultado">Boa sorte!</h2>
+            <h3 id="resultado">Faça sua aposta!</h3>
 
-            <div class="imagens" id="imagens">
-                <img src="{{ url_for('static', filename='alex.png') }}" id="imagem1">
-                <img src="{{ url_for('static', filename='alex.png') }}" id="imagem2">
-                <img src="{{ url_for('static', filename='alex.png') }}" id="imagem3">
+            <div class="imagens">
+                <img id="imagem1" src="{{ url_for('static', filename='alex.png') }}" alt="Roleta">
+                <img id="imagem2" src="{{ url_for('static', filename='balao.png') }}" alt="Roleta">
+                <img id="imagem3" src="{{ url_for('static', filename='biscoito.png') }}" alt="Roleta">
             </div>
 
-            <button id="girar_roleta" class="botao-girar">
-                GIRAR
-            </button>
+            <label for="aposta">Valor da aposta:</label>
+            <input type="number" id="aposta" min="1" value="10">
 
-            <div class="valor">
-                <label for="aposta">Valor da aposta</label>
-                <input type="number" id="aposta" value="10" min="1">
-            </div>
-
+            <button id="girar_roleta" class="botao-girar">GIRAR ROLETА</button>
         </section>
 
-        <!-- MELHORIAS -->
-        <aside class="painel-melhorias painel">
-
-            <h2>Melhorias</h2>
+        <aside class="painel melhorias">
+            <h2>⬆️ Melhorias</h2>
 
             <div class="melhoria-item">
-                <button class="melhorias" id="botao_melhoria2">
-                    Melhorar recompensa
-                </button>
-                <h3>Preço: R$ <span id="custo_melhoria2">200</span></h3>
+                <h3>⚡ Velocidade</h3>
+                <p>Deixa a roleta mais rápida.</p>
+                <p>Preço: <strong id="custo_melhoria1">R$ 200,00</strong></p>
+                <button id="botao_melhoria1">Comprar</button>
             </div>
 
             <div class="melhoria-item">
-                <button class="melhorias" id="botao_melhoria1">
-                    Velocidade do giro
-                </button>
-                <h3>Preço: R$ <span id="custo_melhoria1">200</span></h3>
+                <h3>💰 Multiplicador</h3>
+                <p>Aumenta o prêmio dos giros.</p>
+                <p>Preço: <strong id="custo_melhoria2">R$ 500,00</strong></p>
+                <button id="botao_melhoria2">Comprar</button>
             </div>
-
         </aside>
 
     </main>
 
-    <!-- ÁREA BANCÁRIA -->
     <section class="banco-area">
+        <h2>🏦 Sistema bancário</h2>
+        <p>Contrate um banco para acessar poupança, empréstimos e investimentos.</p>
 
-        <div class="banco-introducao">
-            <h1>🏦 Mercado financeiro</h1>
-            <p>Entre no mundo dos investimentos e faça seu dinheiro trabalhar por você.</p>
-            <h2>Licença bancária: R$ 10.000</h2>
-        </div>
+        <!-- Este botão fica sempre disponível -->
+        <button id="contratar_banco" class="botao-banco">
+            Ver bancos disponíveis
+        </button>
 
-        <!-- CONTRATAÇÃO -->
-        <div id="contratar_banco">
-
-            <h2>Escolha seu banco</h2>
+        <div id="selecao_bancos" hidden>
+            <h3>Escolha seu banco</h3>
+            <p>Contratar um banco custa R$ 10.000.</p>
 
             <div class="bancos">
 
                 <article class="banco-card">
                     <h2>💜 Nubanco</h2>
                     <p>Perfil conservador</p>
-
                     <ul>
-                        <li>Poupança: 0,08%/s</li>
-                        <li>Empréstimo: 0,12%/s</li>
+                        <li>Poupança: 0,08% por segundo</li>
+                        <li>Empréstimo: 0,12% por segundo</li>
                         <li>Limite: R$ 20.000</li>
                         <li>Taxa de ações: 2%</li>
                     </ul>
-
-                    <button class="contratar" data-banco="imperial">
-                        Contratar
-                    </button>
+                    <button class="contratar" data-banco="imperial">Contratar</button>
                 </article>
 
                 <article class="banco-card destaque">
                     <h2>🟠 Ita Aí</h2>
                     <p>Perfil agressivo</p>
-
                     <ul>
-                        <li>Poupança: 0,15%/s</li>
-                        <li>Empréstimo: 0,30%/s</li>
+                        <li>Poupança: 0,15% por segundo</li>
+                        <li>Empréstimo: 0,30% por segundo</li>
                         <li>Limite: R$ 50.000</li>
                         <li>Taxa de ações: 3%</li>
                     </ul>
-
-                    <button class="contratar" data-banco="capital">
-                        Contratar
-                    </button>
+                    <button class="contratar" data-banco="capital">Contratar</button>
                 </article>
 
                 <article class="banco-card">
                     <h2>💚 67 Resenhudos Bank</h2>
                     <p>Perfil equilibrado</p>
-
                     <ul>
-                        <li>Poupança: 0,10%/s</li>
-                        <li>Empréstimo: 0,20%/s</li>
+                        <li>Poupança: 0,10% por segundo</li>
+                        <li>Empréstimo: 0,20% por segundo</li>
                         <li>Limite: R$ 35.000</li>
                         <li>Taxa de ações: 1%</li>
                     </ul>
+                    <button class="contratar" data-banco="popular">Contratar</button>
                 </article>
 
-                
-        <!-- PAINEL DO BANCO -->
-        <div id="painel_banco" hidden>
-
-            <div class="banco-titulo">
-                <h2 id="nome_banco">Seu banco</h2>
-                <p id="informacoes_banco"></p>
             </div>
+        </div>
+
+        <div id="painel_banco" class="painel-banco" hidden>
+            <h2 id="nome_banco">Banco</h2>
+            <p id="informacoes_banco"></p>
 
             <div class="financeiro-grid">
 
-                <!-- POUPANÇA -->
                 <article class="financeiro-card">
-                    <h2>💰 Poupança</h2>
-
+                    <h3>💰 Poupança</h3>
                     <p>Dinheiro guardado:</p>
-                    <h2 id="dinheiro_poupanca">R$ 0,00</h2>
+                    <strong id="dinheiro_poupanca">R$ 0,00</strong>
 
                     <p>Rendimento por segundo:</p>
-                    <h3 id="rendimento_poupanca">R$ 0,00</h3>
+                    <strong id="rendimento_poupanca">0%</strong>
 
-                    <label for="valor_poupanca">Valor:</label>
-                    <input type="number" id="valor_poupanca" min="1" value="100">
-
-                    <div class="acoes-banco">
-                        <button id="depositar">Depositar</button>
-                        <button id="retirar">Retirar</button>
-                    </div>
+                    <input type="number" id="valor_poupanca" min="1" placeholder="Valor">
+                    <button id="depositar">Depositar</button>
+                    <button id="retirar">Retirar</button>
                 </article>
 
-                <!-- EMPRÉSTIMO -->
                 <article class="financeiro-card">
-                    <h2>📄 Empréstimos</h2>
-
+                    <h3>🏦 Empréstimos</h3>
                     <p>Dívida com o banco:</p>
-                    <h2 id="divida_banco">R$ 0,00</h2>
+                    <strong id="divida_banco">R$ 0,00</strong>
 
                     <p>Limite disponível:</p>
-                    <h3 id="limite_emprestimo">R$ 0,00</h3>
+                    <strong id="limite_emprestimo">R$ 0,00</strong>
 
-                    <label for="valor_emprestimo">Valor do empréstimo:</label>
-                    <input type="number" id="valor_emprestimo" min="1" value="1000">
+                    <input type="number" id="valor_emprestimo" min="1" placeholder="Valor do empréstimo">
+                    <button id="pedir_emprestimo">Pedir empréstimo</button>
 
-                    <button id="pedir_emprestimo">Solicitar empréstimo</button>
-
-                    <label for="valor_pagamento">Valor para pagar:</label>
-                    <input type="number" id="valor_pagamento" min="1" value="100">
-
+                    <input type="number" id="valor_pagamento" min="1" placeholder="Valor para pagar">
                     <button id="pagar_emprestimo">Pagar empréstimo</button>
                 </article>
 
-                <!-- BOLSA DE VALORES -->
-                <article class="financeiro-card bolsa-card">
+                <article class="financeiro-card bolsa">
+                    <h3>📈 Bolsa de valores</h3>
 
-                    <h2>📈 Bolsa de valores</h2>
+                    <p>Preço da ação:</p>
+                    <strong id="preco_acao">R$ 100,00</strong>
 
-                    <p>Empresa: <strong>CasinoTech S.A.</strong></p>
+                    <p>Variação:</p>
+                    <strong id="variacao_acao">0%</strong>
 
-                    <p>Preço atual da ação:</p>
-                    <h2 id="preco_acao">R$ 100,00</h2>
+                    <canvas id="grafico_acoes" width="500" height="180"></canvas>
 
-                    <p>Variação: <span id="variacao_acao">0%</span></p>
+                    <p>Quantidade de ações:</p>
+                    <strong id="quantidade_acoes">0</strong>
 
-                    <canvas id="grafico_acoes"></canvas>
+                    <p>Valor da carteira:</p>
+                    <strong id="valor_carteira">R$ 0,00</strong>
 
-                    <div class="carteira">
-                        <p>Suas ações: <strong id="quantidade_acoes">0</strong></p>
-                        <p>Valor da carteira: <strong id="valor_carteira">R$ 0,00</strong></p>
-                    </div>
-
-                    <label for="quantidade_compra">Quantidade de ações:</label>
-                    <input type="number" id="quantidade_compra" min="1" value="1">
-
-                    <div class="acoes-banco">
-                        <button id="comprar_acoes">Comprar ações</button>
-                        <button id="vender_acoes">Vender ações</button>
-                    </div>
+                    <input type="number" id="quantidade_compra" min="1" placeholder="Quantidade">
+                    <button id="comprar_acoes">Comprar ações</button>
+                    <button id="vender_acoes">Vender ações</button>
 
                     <p id="mensagem_acoes"></p>
-
                 </article>
 
             </div>
-
-            <p class="aviso-banco">
-                Os investimentos e rendimentos são simulados dentro do jogo.
-                Os preços das ações variam automaticamente.
-            </p>
-
         </div>
-
     </section>
 
     <script src="{{ url_for('static', filename='projetocassino.js') }}"></script>
-
 </body>
 </html>

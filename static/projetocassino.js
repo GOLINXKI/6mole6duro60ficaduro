@@ -1,7 +1,24 @@
+// ======================================
+// CONFIGURAÇÕES INICIAIS
+// ======================================
 
-// =====================================
-// CONFIGURAÇÕES DO CASSINO
-// =====================================
+let saldo = 1000;
+let giros_totais = 0;
+
+let multiplicador = 100;
+let ganho = 0;
+
+let time = 150;
+let custo_melhoria1 = 200;
+let custo_melhoria2 = 500;
+
+let divida = 11000000000000;
+let tempo = 450;
+
+let girando = false;
+let jogoEncerrado = false;
+
+const precoContratacao = 10000;
 
 const codig = [
     "/static/alex.png",
@@ -11,306 +28,7 @@ const codig = [
     "/static/picareta.png"
 ];
 
-let numero = 0;
-let saldo = 1000;
-let ganho = 1000;
-let giros_totais = 0;
-
-let custo_melhoria1 = 200;
-let custo_melhoria2 = 200;
-
-let multiplicador = 50;
-let time = 150;
-
-let divida = 11000000000000;
-let tempo = 450;
-
-let jogoEncerrado = false;
-
-
-// =====================================
-// ELEMENTOS DO HTML
-// =====================================
-
-const texto_melhoria1 = document.getElementById("custo_melhoria1");
-const texto_melhoria2 = document.getElementById("custo_melhoria2");
-
-const texto_giros_totais = document.getElementById("giros_totais");
-
-const imagem1 = document.getElementById("imagem1");
-const imagem2 = document.getElementById("imagem2");
-const imagem3 = document.getElementById("imagem3");
-
-const texto_saldo = document.getElementById("saldo");
-
-const botao = document.getElementById("girar_roleta");
-const resultado = document.getElementById("resultado");
-
-const texto_numero = document.getElementById("numero");
-
-const botao_melhoria1 = document.getElementById("botao_melhoria1");
-const botao_melhoria2 = document.getElementById("botao_melhoria2");
-
-const texto_custo_giro = document.getElementById("custo_giro");
-const texto_ganho_giro = document.getElementById("ganho_giro");
-
-const caixa_aposta = document.getElementById("aposta");
-
-const texto_timer = document.getElementById("timer");
-const texto_divida = document.getElementById("divida");
-
-const estado = document.getElementById("estado");
-const botao_pagar = document.getElementById("pagar_divida");
-
-
-// =====================================
-// FUNÇÕES GERAIS
-// =====================================
-
-function dinheiro(valor) {
-
-    return Number(valor).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-    });
-
-}
-
-function atualizarSaldo() {
-
-    texto_saldo.innerText = dinheiro(saldo);
-
-}
-
-function atualizarGanho() {
-
-    ganho = Number(caixa_aposta.value) * multiplicador / 50;
-
-    texto_ganho_giro.innerText = dinheiro(ganho);
-
-    texto_custo_giro.innerText =
-        (multiplicador / 50).toFixed(2).replace(".", ",") + "x";
-
-}
-
-function encerrarJogo(mensagem) {
-
-    if (jogoEncerrado) return;
-
-    jogoEncerrado = true;
-
-    estado.innerText = mensagem;
-
-    document.querySelectorAll("button").forEach(function(botao) {
-        botao.disabled = true;
-    });
-
-    clearInterval(contagem);
-
-}
-
-
-// =====================================
-// APOSTA
-// =====================================
-
-caixa_aposta.addEventListener("input", function() {
-
-    atualizarGanho();
-
-});
-
-
-// =====================================
-// CONTAGEM DO TEMPO
-// =====================================
-
-const contagem = setInterval(function() {
-
-    if (jogoEncerrado) return;
-
-    tempo--;
-
-    texto_timer.innerText = tempo;
-
-    if (tempo <= 0) {
-
-        clearInterval(contagem);
-
-        encerrarJogo("GAME OVER! O TEMPO ACABOU!");
-
-    }
-
-}, 1000);
-
-
-// =====================================
-// PAGAR DÍVIDA PRINCIPAL
-// =====================================
-
-botao_pagar.addEventListener("click", function() {
-
-    if (jogoEncerrado) return;
-
-    if (saldo >= divida) {
-
-        saldo -= divida;
-
-        atualizarSaldo();
-
-        encerrarJogo("DÍVIDA PAGA! VOCÊ VENCEU!");
-
-    } else {
-
-        estado.innerText = "Você não tem dinheiro suficiente!";
-
-    }
-
-});
-
-
-// =====================================
-// MELHORIA 1 - VELOCIDADE
-// =====================================
-
-botao_melhoria1.addEventListener("click", function() {
-
-    if (saldo >= custo_melhoria1) {
-
-        saldo -= custo_melhoria1;
-
-        custo_melhoria1 *= 2;
-
-        time = Math.max(30, time - 5);
-
-        texto_melhoria1.innerText = dinheiro(custo_melhoria1);
-
-        atualizarSaldo();
-
-    }
-
-});
-
-
-// =====================================
-// MELHORIA 2 - MULTIPLICADOR
-// =====================================
-
-botao_melhoria2.addEventListener("click", function() {
-
-    if (saldo >= custo_melhoria2) {
-
-        saldo -= custo_melhoria2;
-
-        custo_melhoria2 *= 2;
-
-        multiplicador *= 1.5;
-
-        texto_melhoria2.innerText = dinheiro(custo_melhoria2);
-
-        atualizarGanho();
-        atualizarSaldo();
-
-    }
-
-});
-
-
-// =====================================
-// ROLETA
-// =====================================
-
-botao.addEventListener("click", function() {
-
-    if (jogoEncerrado) return;
-
-    let custo = Number(caixa_aposta.value);
-
-    if (!Number.isFinite(custo) || custo <= 0) {
-
-        resultado.innerText = "Digite uma aposta válida!";
-        return;
-
-    }
-
-    if (saldo < custo) {
-
-        resultado.innerText = "Saldo insuficiente!";
-        return;
-
-    }
-
-    resultado.innerText = "Girando...";
-
-    botao.disabled = true;
-
-    giros_totais++;
-
-    texto_giros_totais.innerText = giros_totais;
-
-    let trocas = 0;
-
-    const premio = ganho;
-
-    const animacaoRapida = setInterval(function() {
-
-        imagem1.src = codig[Math.floor(Math.random() * codig.length)];
-        imagem2.src = codig[Math.floor(Math.random() * codig.length)];
-        imagem3.src = codig[Math.floor(Math.random() * codig.length)];
-
-        trocas++;
-
-        if (trocas >= 6) {
-
-            clearInterval(animacaoRapida);
-
-            let numero1 = Math.floor(Math.random() * 5);
-            let numero2 = Math.floor(Math.random() * 5);
-            let numero3 = Math.floor(Math.random() * 5);
-
-            imagem1.src = codig[numero1];
-            imagem2.src = codig[numero2];
-            imagem3.src = codig[numero3];
-
-            if (numero1 === numero2 && numero2 === numero3) {
-
-                resultado.innerText = "Você ganhou!";
-
-                numero++;
-
-                texto_numero.innerText = numero;
-
-                saldo += premio;
-
-            } else {
-
-                resultado.innerText = "Você perdeu!";
-
-                saldo -= custo;
-
-            }
-
-            atualizarSaldo();
-
-            if (!jogoEncerrado) {
-                botao.disabled = false;
-            }
-
-        }
-
-    }, time);
-
-});
-
-
-// =====================================
-// SISTEMA BANCÁRIO
-// =====================================
-
-// Configurações dos três bancos
-
 const bancos = {
-
     imperial: {
         nome: "Nubanco",
         poupanca: 0.0008,
@@ -334,268 +52,712 @@ const bancos = {
         limite: 35000,
         taxa: 0.01
     }
-
 };
 
-
-// Variáveis do banco
-
 let bancoAtual = null;
-
 let dinheiroPoupanca = 0;
-
 let dividaBanco = 0;
+let quantidadeAcoes = 0;
 
-let acoes = 0;
+let precoAcao = 100;
+let variacaoAcao = 0;
+let historicoAcoes = [100];
 
 
-// Elementos do banco
+// ======================================
+// ELEMENTOS HTML
+// ======================================
 
-const contratarBanco = document.getElementById("contratar_banco");
+const elementoSaldo = document.getElementById("saldo");
+const elementoGiros = document.getElementById("giros_totais");
+const elementoNumero = document.getElementById("numero");
+const elementoMultiplicador = document.getElementById("multiplicador");
+const elementoGanho = document.getElementById("ganho_giro");
+
+const elementoAposta = document.getElementById("aposta");
+const botaoGirar = document.getElementById("girar_roleta");
+const elementoResultado = document.getElementById("resultado");
+
+const imagem1 = document.getElementById("imagem1");
+const imagem2 = document.getElementById("imagem2");
+const imagem3 = document.getElementById("imagem3");
+
+const elementoDivida = document.getElementById("divida");
+const elementoTimer = document.getElementById("timer");
+const elementoEstado = document.getElementById("estado");
+
+
+// ======================================
+// FUNÇÕES GERAIS
+// ======================================
+
+function dinheiro(valor) {
+    return Number(valor).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
+function atualizarTela() {
+    elementoSaldo.textContent = dinheiro(saldo);
+    elementoGiros.textContent = giros_totais;
+    elementoMultiplicador.textContent = "x" + multiplicador;
+
+    const aposta = Math.max(0, Number(elementoAposta.value) || 0);
+
+    ganho = aposta * multiplicador;
+
+    elementoGanho.textContent = dinheiro(ganho);
+
+    document.getElementById("custo_melhoria1").textContent =
+        dinheiro(custo_melhoria1);
+
+    document.getElementById("custo_melhoria2").textContent =
+        dinheiro(custo_melhoria2);
+
+    elementoDivida.textContent = dinheiro(divida);
+}
+
+function verificarJogo() {
+    if (jogoEncerrado) {
+        return true;
+    }
+
+    return false;
+}
+
+
+// ======================================
+// APOSTAS E ROLETA
+// ======================================
+
+elementoAposta.addEventListener("input", atualizarTela);
+
+botaoGirar.addEventListener("click", girarRoleta);
+
+function girarRoleta() {
+    if (verificarJogo() || girando) {
+        return;
+    }
+
+    const aposta = Number(elementoAposta.value);
+
+    if (!Number.isFinite(aposta) || aposta <= 0) {
+        elementoResultado.textContent = "Digite uma aposta válida!";
+        return;
+    }
+
+    if (aposta > saldo) {
+        elementoResultado.textContent = "Você não tem dinheiro suficiente!";
+        return;
+    }
+
+    girando = true;
+    botaoGirar.disabled = true;
+
+    elementoResultado.textContent = "Girando...";
+
+    let trocas = 0;
+
+    const intervalo = setInterval(() => {
+        imagem1.src = codig[Math.floor(Math.random() * codig.length)];
+        imagem2.src = codig[Math.floor(Math.random() * codig.length)];
+        imagem3.src = codig[Math.floor(Math.random() * codig.length)];
+
+        trocas++;
+
+        if (trocas >= 30) {
+            clearInterval(intervalo);
+
+            finalizarGiro(aposta);
+
+            girando = false;
+
+            if (!jogoEncerrado) {
+                botaoGirar.disabled = false;
+            }
+        }
+    }, time);
+}
+
+function finalizarGiro(aposta) {
+    giros_totais++;
+
+    const numero1 = Math.floor(Math.random() * codig.length);
+    const numero2 = Math.floor(Math.random() * codig.length);
+    const numero3 = Math.floor(Math.random() * codig.length);
+
+    imagem1.src = codig[numero1];
+    imagem2.src = codig[numero2];
+    imagem3.src = codig[numero3];
+
+    elementoNumero.textContent = numero1 + 1;
+
+    if (numero1 === numero2 && numero2 === numero3) {
+
+        // Prêmio: 100 vezes a aposta
+        const premio = aposta * multiplicador;
+
+        saldo += premio;
+
+        elementoResultado.textContent =
+            "🎉 VOCÊ GANHOU! Prêmio: " + dinheiro(premio);
+
+    } else {
+
+        saldo -= aposta;
+
+        elementoResultado.textContent =
+            "Você perdeu " + dinheiro(aposta);
+    }
+
+    atualizarTela();
+}
+
+
+// ======================================
+// MELHORIA DE VELOCIDADE
+// ======================================
+
+document.getElementById("botao_melhoria1").addEventListener("click", () => {
+    if (verificarJogo()) return;
+
+    if (saldo < custo_melhoria1) {
+        alert("Dinheiro insuficiente!");
+        return;
+    }
+
+    if (time <= 30) {
+        alert("A velocidade já está no máximo!");
+        return;
+    }
+
+    saldo -= custo_melhoria1;
+
+    time = Math.max(30, time - 5);
+
+    custo_melhoria1 = Math.floor(custo_melhoria1 * 1.7);
+
+    atualizarTela();
+});
+
+
+// ======================================
+// MELHORIA DE MULTIPLICADOR
+// ======================================
+
+document.getElementById("botao_melhoria2").addEventListener("click", () => {
+    if (verificarJogo()) return;
+
+    if (saldo < custo_melhoria2) {
+        alert("Dinheiro insuficiente!");
+        return;
+    }
+
+    saldo -= custo_melhoria2;
+
+    multiplicador = Math.floor(multiplicador * 1.5);
+
+    custo_melhoria2 = Math.floor(custo_melhoria2 * 2);
+
+    atualizarTela();
+});
+
+
+// ======================================
+// DÍVIDA
+// ======================================
+
+document.getElementById("pagar_divida").addEventListener("click", () => {
+    if (verificarJogo()) return;
+
+    if (saldo <= 0) {
+        alert("Você não tem dinheiro para pagar a dívida!");
+        return;
+    }
+
+    const pagamento = Math.min(saldo, divida);
+
+    saldo -= pagamento;
+    divida -= pagamento;
+
+    atualizarTela();
+
+    if (divida <= 0) {
+        divida = 0;
+        encerrarJogo(true);
+    }
+});
+
+
+// ======================================
+// SISTEMA DE TEMPO
+// ======================================
+
+const contagem = setInterval(() => {
+    if (jogoEncerrado) return;
+
+    tempo--;
+
+    elementoTimer.textContent = tempo;
+
+    if (tempo <= 0) {
+        tempo = 0;
+        encerrarJogo(false);
+    }
+
+}, 1000);
+
+
+function encerrarJogo(vitoria) {
+    if (jogoEncerrado) return;
+
+    jogoEncerrado = true;
+
+    clearInterval(contagem);
+
+    document.querySelectorAll("button").forEach(botao => {
+        botao.disabled = true;
+    });
+
+    elementoAposta.disabled = true;
+
+    if (vitoria) {
+        elementoEstado.textContent = "🏆 PARABÉNS! Você pagou toda a dívida!";
+        elementoResultado.textContent = "VOCÊ VENCEU!";
+    } else {
+        elementoEstado.textContent = "💀 O tempo acabou! Você não conseguiu pagar a dívida.";
+        elementoResultado.textContent = "FIM DE JOGO!";
+    }
+}
+
+
+// ======================================
+// SISTEMA DE BANCOS
+// ======================================
+
+const botaoAbrirBancos = document.getElementById("contratar_banco");
+const selecaoBancos = document.getElementById("selecao_bancos");
 const painelBanco = document.getElementById("painel_banco");
 
-const nomeBanco = document.getElementById("nome_banco");
-const informacoesBanco = document.getElementById("informacoes_banco");
+// O botão de abrir os bancos nunca depende do saldo.
+botaoAbrirBancos.addEventListener("click", () => {
+    if (verificarJogo()) return;
 
-const textoPoupanca = document.getElementById("dinheiro_poupanca");
-const textoRendimento = document.getElementById("rendimento_poupanca");
-
-const textoDividaBanco = document.getElementById("divida_banco");
-const textoLimite = document.getElementById("limite_emprestimo");
-
-const inputPoupanca = document.getElementById("valor_poupanca");
-const inputEmprestimo = document.getElementById("valor_emprestimo");
-const inputPagamento = document.getElementById("valor_pagamento");
-
-const inputAcoes = document.getElementById("quantidade_compra");
-
-const mensagemAcoes = document.getElementById("mensagem_acoes");
-
-const textoPrecoAcao = document.getElementById("preco_acao");
-const textoVariacao = document.getElementById("variacao_acao");
-
-const textoQuantidadeAcoes = document.getElementById("quantidade_acoes");
-const textoValorCarteira = document.getElementById("valor_carteira");
+    selecaoBancos.hidden = !selecaoBancos.hidden;
+});
 
 
-// =====================================
-// CONTRATAR BANCO
-// =====================================
+// Atualiza os botões de contratação sem escondê-los.
+function atualizarBotoesBancos() {
+    document.querySelectorAll(".contratar").forEach(botao => {
+        botao.disabled =
+            verificarJogo() ||
+            bancoAtual !== null ||
+            saldo < precoContratacao;
 
-document.querySelectorAll(".contratar").forEach(function(botaoBanco) {
+        if (bancoAtual !== null) {
+            botao.textContent = "Banco já contratado";
+        } else {
+            botao.textContent = "Contratar";
+        }
+    });
+}
 
-    botaoBanco.addEventListener("click", function() {
 
-        if (jogoEncerrado) return;
+// Contratar um banco.
+document.querySelectorAll(".contratar").forEach(botao => {
 
-        if (bancoAtual !== null) return;
+    botao.addEventListener("click", () => {
+        if (verificarJogo()) return;
 
-        if (saldo < 10000) {
-
-            alert("Você precisa de R$ 10.000 para contratar um banco!");
-
+        if (bancoAtual !== null) {
+            alert("Você já possui um banco!");
             return;
-
         }
 
-        const escolha = botaoBanco.dataset.banco;
+        if (saldo < precoContratacao) {
+            alert("Você precisa de R$ 10.000 para contratar um banco!");
+            return;
+        }
 
-        bancoAtual = bancos[escolha];
+        const identificador = botao.dataset.banco;
 
-        saldo -= 10000;
+        bancoAtual = bancos[identificador];
 
-        atualizarSaldo();
+        saldo -= precoContratacao;
 
-        contratarBanco.hidden = true;
+        document.getElementById("nome_banco").textContent =
+            bancoAtual.nome;
+
+        document.getElementById("informacoes_banco").textContent =
+            "Seu banco está contratado! Aproveite os serviços disponíveis.";
 
         painelBanco.hidden = false;
-
-        nomeBanco.innerText = bancoAtual.nome;
-
-        informacoesBanco.innerText =
-            "Poupança: " + (bancoAtual.poupanca * 100).toFixed(2) +
-            "% por segundo | Juros: " +
-            (bancoAtual.juros * 100).toFixed(2) +
-            "% por segundo";
+        selecaoBancos.hidden = true;
 
         atualizarBanco();
-
-        alert("Parabéns! Você contratou o " + bancoAtual.nome + "!");
-
+        atualizarTela();
+        atualizarBotoesBancos();
     });
 
 });
 
 
-// =====================================
-// ATUALIZAR PAINEL BANCÁRIO
-// =====================================
+// ======================================
+// ATUALIZAÇÃO DO BANCO
+// ======================================
 
 function atualizarBanco() {
-
     if (bancoAtual === null) return;
 
-    textoPoupanca.innerText = dinheiro(dinheiroPoupanca);
+    document.getElementById("dinheiro_poupanca").textContent =
+        dinheiro(dinheiroPoupanca);
 
-    textoRendimento.innerText =
-        dinheiro(dinheiroPoupanca * bancoAtual.poupanca);
+    document.getElementById("rendimento_poupanca").textContent =
+        (bancoAtual.poupanca * 100).toFixed(2) + "% por segundo";
 
-    textoDividaBanco.innerText = dinheiro(dividaBanco);
+    document.getElementById("divida_banco").textContent =
+        dinheiro(dividaBanco);
 
-    textoLimite.innerText =
-        dinheiro(Math.max(0, bancoAtual.limite - dividaBanco));
+    const limiteDisponivel = Math.max(
+        0,
+        bancoAtual.limite - dividaBanco
+    );
 
-    textoQuantidadeAcoes.innerText = acoes;
+    document.getElementById("limite_emprestimo").textContent =
+        dinheiro(limiteDisponivel);
 
-    textoValorCarteira.innerText = dinheiro(acoes * precoAcao);
+    document.getElementById("quantidade_acoes").textContent =
+        quantidadeAcoes;
 
+    document.getElementById("valor_carteira").textContent =
+        dinheiro(quantidadeAcoes * precoAcao);
 }
 
 
-// =====================================
-// POUPANÇA
-// =====================================
+// ======================================
+// DEPÓSITO NA POUPANÇA
+// ======================================
 
-document.getElementById("depositar").addEventListener("click", function() {
+document.getElementById("depositar").addEventListener("click", () => {
+    if (verificarJogo()) return;
+    if (bancoAtual === null) return;
 
-    if (bancoAtual === null || jogoEncerrado) return;
+    const valor = Number(
+        document.getElementById("valor_poupanca").value
+    );
 
-    let valor = Number(inputPoupanca.value);
+    if (!Number.isFinite(valor) || valor <= 0) {
+        alert("Digite um valor válido!");
+        return;
+    }
 
-    if (!Number.isFinite(valor) || valor <= 0) return;
-
-    if (saldo >= valor) {
-
-        saldo -= valor;
-
-        dinheiroPoupanca += valor;
-
-        atualizarSaldo();
-        atualizarBanco();
-
-    } else {
-
+    if (valor > saldo) {
         alert("Saldo insuficiente!");
-
-    }
-
-});
-
-
-document.getElementById("retirar").addEventListener("click", function() {
-
-    if (bancoAtual === null || jogoEncerrado) return;
-
-    let valor = Number(inputPoupanca.value);
-
-    if (!Number.isFinite(valor) || valor <= 0) return;
-
-    if (dinheiroPoupanca >= valor) {
-
-        dinheiroPoupanca -= valor;
-
-        saldo += valor;
-
-        atualizarSaldo();
-        atualizarBanco();
-
-    } else {
-
-        alert("Você não tem esse valor na poupança!");
-
-    }
-
-});
-
-
-// =====================================
-// EMPRÉSTIMOS
-// =====================================
-
-document.getElementById("pedir_emprestimo").addEventListener("click", function() {
-
-    if (bancoAtual === null || jogoEncerrado) return;
-
-    let valor = Number(inputEmprestimo.value);
-
-    let limiteDisponivel = bancoAtual.limite - dividaBanco;
-
-    if (!Number.isFinite(valor) || valor <= 0) return;
-
-    if (valor > limiteDisponivel) {
-
-        alert("Você ultrapassou seu limite de empréstimo!");
-
         return;
-
-    }
-
-    dividaBanco += valor;
-
-    saldo += valor;
-
-    atualizarSaldo();
-    atualizarBanco();
-
-});
-
-
-document.getElementById("pagar_emprestimo").addEventListener("click", function() {
-
-    if (bancoAtual === null || jogoEncerrado) return;
-
-    let valor = Number(inputPagamento.value);
-
-    if (!Number.isFinite(valor) || valor <= 0) return;
-
-    if (saldo < valor) {
-
-        alert("Saldo insuficiente!");
-
-        return;
-
-    }
-
-    if (dividaBanco <= 0) {
-
-        alert("Você não possui empréstimos!");
-
-        return;
-
-    }
-
-    if (valor > dividaBanco) {
-
-        alert("O pagamento não pode ser maior que sua dívida!");
-
-        return;
-
     }
 
     saldo -= valor;
+    dinheiroPoupanca += valor;
 
-    dividaBanco -= valor;
+    document.getElementById("valor_poupanca").value = "";
 
-    atualizarSaldo();
+    atualizarTela();
     atualizarBanco();
-
 });
 
 
-// =====================================
-// JUROS AUTOMÁTICOS
-// =====================================
+// ======================================
+// RETIRAR DA POUPANÇA
+// ======================================
 
-setInterval(function() {
+document.getElementById("retirar").addEventListener("click", () => {
+    if (verificarJogo()) return;
+    if (bancoAtual === null) return;
 
-    if (bancoAtual === null || jogoEncerrado) return;
+    const valor = Number(
+        document.getElementById("valor_poupanca").value
+    );
 
-    // Rendimento da poupança
+    if (!Number.isFinite(valor) || valor <= 0) {
+        alert("Digite um valor válido!");
+        return;
+    }
 
+    if (valor > dinheiroPoupanca) {
+        alert("Você não tem esse valor na poupança!");
+        return;
+    }
+
+    dinheiroPoupanca -= valor;
+    saldo += valor;
+
+    document.getElementById("valor_poupanca").value = "";
+
+    atualizarTela();
+    atualizarBanco();
+});
+
+
+// ======================================
+// PEDIR EMPRÉSTIMO
+// ======================================
+
+document.getElementById("pedir_emprestimo").addEventListener("click", () => {
+    if (verificarJogo()) return;
+    if (bancoAtual === null) return;
+
+    const valor = Number(
+        document.getElementById("valor_emprestimo").value
+    );
+
+    const limiteDisponivel = bancoAtual.limite - dividaBanco;
+
+    if (!Number.isFinite(valor) || valor <= 0) {
+        alert("Digite um valor válido!");
+        return;
+    }
+
+    if (valor > limiteDisponivel) {
+        alert("Você ultrapassou o limite do banco!");
+        return;
+    }
+
+    saldo += valor;
+    dividaBanco += valor;
+
+    document.getElementById("valor_emprestimo").value = "";
+
+    atualizarTela();
+    atualizarBanco();
+});
+
+
+// ======================================
+// PAGAR EMPRÉSTIMO
+// ======================================
+
+document.getElementById("pagar_emprestimo").addEventListener("click", () => {
+    if (verificarJogo()) return;
+    if (bancoAtual === null) return;
+
+    const valor = Number(
+        document.getElementById("valor_pagamento").value
+    );
+
+    if (!Number.isFinite(valor) || valor <= 0) {
+        alert("Digite um valor válido!");
+        return;
+    }
+
+    if (valor > saldo) {
+        alert("Você não tem saldo suficiente!");
+        return;
+    }
+
+    if (valor > dividaBanco) {
+        alert("O pagamento é maior que sua dívida com o banco!");
+        return;
+    }
+
+    saldo -= valor;
+    dividaBanco -= valor;
+
+    document.getElementById("valor_pagamento").value = "";
+
+    atualizarTela();
+    atualizarBanco();
+});
+
+
+// ======================================
+// BOLSA DE VALORES
+// ======================================
+
+function atualizarBolsa() {
+    if (bancoAtual === null) return;
+
+    const precoAnterior = precoAcao;
+
+    // Variação aleatória entre -3% e +3%.
+    variacaoAcao = (Math.random() * 6) - 3;
+
+    precoAcao = precoAcao * (1 + variacaoAcao / 100);
+
+    // Evita que o preço fique próximo de zero.
+    precoAcao = Math.max(1, precoAcao);
+
+    historicoAcoes.push(precoAcao);
+
+    if (historicoAcoes.length > 40) {
+        historicoAcoes.shift();
+    }
+
+    document.getElementById("preco_acao").textContent =
+        dinheiro(precoAcao);
+
+    const elementoVariacao = document.getElementById("variacao_acao");
+
+    elementoVariacao.textContent =
+        variacaoAcao.toFixed(2) + "%";
+
+    elementoVariacao.style.color =
+        variacaoAcao >= 0 ? "#55df91" : "#ff7777";
+
+    atualizarBanco();
+    desenharGrafico();
+}
+
+
+// ======================================
+// DESENHAR GRÁFICO
+// ======================================
+
+function desenharGrafico() {
+    const canvas = document.getElementById("grafico_acoes");
+    const contexto = canvas.getContext("2d");
+
+    const largura = canvas.width;
+    const altura = canvas.height;
+
+    contexto.clearRect(0, 0, largura, altura);
+
+    const minimo = Math.min(...historicoAcoes);
+    const maximo = Math.max(...historicoAcoes);
+
+    const diferenca = Math.max(maximo - minimo, 1);
+
+    // Linhas de referência.
+    contexto.strokeStyle = "#ffffff22";
+    contexto.lineWidth = 1;
+
+    for (let i = 1; i < 4; i++) {
+        const y = (altura / 4) * i;
+
+        contexto.beginPath();
+        contexto.moveTo(0, y);
+        contexto.lineTo(largura, y);
+        contexto.stroke();
+    }
+
+    // Linha do gráfico.
+    contexto.beginPath();
+
+    historicoAcoes.forEach((preco, indice) => {
+        const x = (indice / Math.max(historicoAcoes.length - 1, 1))
+            * largura;
+
+        const y = altura - (
+            ((preco - minimo) / diferenca) * (altura - 20) + 10
+        );
+
+        if (indice === 0) {
+            contexto.moveTo(x, y);
+        } else {
+            contexto.lineTo(x, y);
+        }
+    });
+
+    contexto.strokeStyle = "#8c70ff";
+    contexto.lineWidth = 3;
+    contexto.stroke();
+}
+
+
+// ======================================
+// COMPRAR AÇÕES
+// ======================================
+
+document.getElementById("comprar_acoes").addEventListener("click", () => {
+    if (verificarJogo()) return;
+    if (bancoAtual === null) return;
+
+    const quantidade = Number(
+        document.getElementById("quantidade_compra").value
+    );
+
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        alert("Digite uma quantidade válida!");
+        return;
+    }
+
+    const valorCompra = quantidade * precoAcao;
+
+    const taxa = valorCompra * bancoAtual.taxa;
+
+    const custoTotal = valorCompra + taxa;
+
+    if (custoTotal > saldo) {
+        alert("Você não tem dinheiro suficiente!");
+        return;
+    }
+
+    saldo -= custoTotal;
+    quantidadeAcoes += quantidade;
+
+    document.getElementById("mensagem_acoes").textContent =
+        "Você comprou " + quantidade + " ações!";
+
+    document.getElementById("quantidade_compra").value = "";
+
+    atualizarTela();
+    atualizarBanco();
+});
+
+
+// ======================================
+// VENDER AÇÕES
+// ======================================
+
+document.getElementById("vender_acoes").addEventListener("click", () => {
+    if (verificarJogo()) return;
+    if (bancoAtual === null) return;
+
+    const quantidade = Number(
+        document.getElementById("quantidade_compra").value
+    );
+
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        alert("Digite uma quantidade válida!");
+        return;
+    }
+
+    if (quantidade > quantidadeAcoes) {
+        alert("Você não possui tantas ações!");
+        return;
+    }
+
+    const valorVenda = quantidade * precoAcao;
+
+    const taxa = valorVenda * bancoAtual.taxa;
+
+    const valorFinal = valorVenda - taxa;
+
+    saldo += valorFinal;
+    quantidadeAcoes -= quantidade;
+
+    document.getElementById("mensagem_acoes").textContent =
+        "Você vendeu " + quantidade + " ações!";
+
+    document.getElementById("quantidade_compra").value = "";
+
+    atualizarTela();
+    atualizarBanco();
+});
+
+
+// ======================================
+// RENDIMENTOS E JUROS DO BANCO
+// ======================================
+
+setInterval(() => {
+    if (jogoEncerrado || bancoAtual === null) return;
+
+    // Rendimento da poupança.
     dinheiroPoupanca += dinheiroPoupanca * bancoAtual.poupanca;
 
-    // Juros do empréstimo
-
+    // Juros da dívida bancária.
     dividaBanco += dividaBanco * bancoAtual.juros;
 
     atualizarBanco();
@@ -603,254 +765,22 @@ setInterval(function() {
 }, 1000);
 
 
-// =====================================
-// BOLSA DE VALORES
-// =====================================
+// ======================================
+// ATUALIZAÇÃO DA BOLSA
+// ======================================
 
-// Preço inicial da ação
-
-let precoAcao = 100;
-
-let precoAnterior = 100;
-
-// Histórico dos preços
-
-let historicoPrecos = [100];
-
-
-// =====================================
-// COMPRAR AÇÕES
-// =====================================
-
-document.getElementById("comprar_acoes").addEventListener("click", function() {
-
-    if (bancoAtual === null || jogoEncerrado) return;
-
-    let quantidade = Number(inputAcoes.value);
-
-    if (!Number.isInteger(quantidade) || quantidade <= 0) {
-
-        mensagemAcoes.innerText = "Digite uma quantidade válida!";
-        return;
-
-    }
-
-    let custo = precoAcao * quantidade;
-
-    // Taxa cobrada pelo banco
-
-    let taxa = custo * bancoAtual.taxa;
-
-    let custoTotal = custo + taxa;
-
-    if (saldo < custoTotal) {
-
-        mensagemAcoes.innerText = "Dinheiro insuficiente!";
-        return;
-
-    }
-
-    saldo -= custoTotal;
-
-    acoes += quantidade;
-
-    mensagemAcoes.innerText =
-        "Você comprou " + quantidade + " ações!";
-
-    atualizarSaldo();
-    atualizarBanco();
-
-});
-
-
-// =====================================
-// VENDER AÇÕES
-// =====================================
-
-document.getElementById("vender_acoes").addEventListener("click", function() {
-
-    if (bancoAtual === null || jogoEncerrado) return;
-
-    let quantidade = Number(inputAcoes.value);
-
-    if (!Number.isInteger(quantidade) || quantidade <= 0) {
-
-        mensagemAcoes.innerText = "Digite uma quantidade válida!";
-        return;
-
-    }
-
-    if (acoes < quantidade) {
-
-        mensagemAcoes.innerText = "Você não possui tantas ações!";
-        return;
-
-    }
-
-    let valorVenda = precoAcao * quantidade;
-
-    let taxa = valorVenda * bancoAtual.taxa;
-
-    let valorFinal = valorVenda - taxa;
-
-    acoes -= quantidade;
-
-    saldo += valorFinal;
-
-    mensagemAcoes.innerText =
-        "Você vendeu " + quantidade + " ações!";
-
-    atualizarSaldo();
-    atualizarBanco();
-
-});
-
-
-// =====================================
-// MOVIMENTAÇÃO DA BOLSA
-// =====================================
-
-setInterval(function() {
-
-    if (bancoAtual === null || jogoEncerrado) return;
-
-    precoAnterior = precoAcao;
-
-    // Variação aleatória de aproximadamente -3% até +3%
-
-    let variacao = (Math.random() * 0.06) - 0.03;
-
-    precoAcao *= (1 + variacao);
-
-    // Impede o preço de chegar a zero
-
-    precoAcao = Math.max(1, precoAcao);
-
-    historicoPrecos.push(precoAcao);
-
-    // Mantém apenas os últimos 40 preços
-
-    if (historicoPrecos.length > 40) {
-
-        historicoPrecos.shift();
-
-    }
+setInterval(() => {
+    if (jogoEncerrado) return;
 
     atualizarBolsa();
 
 }, 1000);
 
 
-// =====================================
-// ATUALIZAR BOLSA
-// =====================================
+// ======================================
+// INICIALIZAÇÃO
+// ======================================
 
-function atualizarBolsa() {
-
-    textoPrecoAcao.innerText = dinheiro(precoAcao);
-
-    let variacao = ((precoAcao - precoAnterior) / precoAnterior) * 100;
-
-    textoVariacao.innerText =
-        (variacao >= 0 ? "+" : "") + variacao.toFixed(2) + "%";
-
-    textoVariacao.style.color =
-        variacao >= 0 ? "green" : "red";
-
-    atualizarBanco();
-
-    desenharGrafico();
-
-}
-
-
-// =====================================
-// DESENHAR GRÁFICO
-// =====================================
-
-function desenharGrafico() {
-
-    const canvas = document.getElementById("grafico_acoes");
-
-    const contexto = canvas.getContext("2d");
-
-    const largura = canvas.clientWidth;
-    const altura = canvas.clientHeight;
-
-    if (!largura || !altura) return;
-
-    canvas.width = largura * window.devicePixelRatio;
-    canvas.height = altura * window.devicePixelRatio;
-
-    contexto.scale(
-        window.devicePixelRatio,
-        window.devicePixelRatio
-    );
-
-    // Fundo
-
-    contexto.clearRect(0, 0, largura, altura);
-
-    contexto.strokeStyle = "#dddddd";
-    contexto.lineWidth = 1;
-
-    for (let i = 1; i <= 3; i++) {
-
-        let y = (altura / 4) * i;
-
-        contexto.beginPath();
-        contexto.moveTo(0, y);
-        contexto.lineTo(largura, y);
-        contexto.stroke();
-
-    }
-
-    if (historicoPrecos.length < 2) return;
-
-    let maximo = Math.max(...historicoPrecos);
-    let minimo = Math.min(...historicoPrecos);
-
-    let diferenca = maximo - minimo;
-
-    if (diferenca === 0) diferenca = 1;
-
-    contexto.beginPath();
-
-    historicoPrecos.forEach(function(preco, indice) {
-
-        let x = (indice / 39) * largura;
-
-        let y = altura -
-            ((preco - minimo) / diferenca) * (altura - 20) - 10;
-
-        if (indice === 0) {
-
-            contexto.moveTo(x, y);
-
-        } else {
-
-            contexto.lineTo(x, y);
-
-        }
-
-    });
-
-    contexto.strokeStyle =
-        precoAcao >= precoAnterior ? "#16834a" : "#d93636";
-
-    contexto.lineWidth = 3;
-
-    contexto.stroke();
-
-}
-
-
-// =====================================
-// VALORES INICIAIS
-// =====================================
-
-atualizarSaldo();
-
-atualizarGanho();
-
-atualizarBolsa();
+atualizarTela();
+atualizarBotoesBancos();
+desenharGrafico();
