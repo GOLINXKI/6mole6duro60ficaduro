@@ -8,7 +8,7 @@ let giros_totais = 0;
 let multiplicador = 100;
 let ganho = 0;
 
-let time = 150;
+let time = 75;
 let custo_melhoria1 = 200;
 let custo_melhoria2 = 500;
 
